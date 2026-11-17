@@ -1,0 +1,90 @@
+{
+  "name": "pi-debugger",
+  "version": "0.1.0",
+  "description": "Zero-config multi-session DAP & V8 Inspector debugger for Pi: one-shot debug_probe, live PID/port attach, pre-launch breakpoints, and automatic Python/Node/TypeScript/Go/Rust/C++ adapter discovery.",
+  "type": "module",
+  "license": "MIT",
+  "author": "yiyabo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yiyabo/pi-debugger.git"
+  },
+  "homepage": "https://github.com/yiyabo/pi-debugger#readme",
+  "bugs": {
+    "url": "https://github.com/yiyabo/pi-debugger/issues"
+  },
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-extension",
+    "pi-coding-agent",
+    "dap",
+    "debug-adapter-protocol",
+    "debugger",
+    "debugpy",
+    "node-inspector",
+    "lldb-dap",
+    "codelldb",
+    "delve",
+    "ai-agent"
+  ],
+  "files": [
+    "extensions",
+    "src",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "pi": {
+    "extensions": [
+      "./extensions/index.ts"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  },
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.ts",
+    "check": "npm run typecheck && npm test"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-agent-core": "*",
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*",
+    "typebox": "*"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-agent-core": {
+      "optional": true
+    },
+    "@earendil-works/pi-ai": {
+      "optional": true
+    },
+    "@earendil-works/pi-coding-agent": {
+      "optional": true
+    },
+    "@earendil-works/pi-tui": {
+      "optional": true
+    },
+    "typebox": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@earendil-works/pi-agent-core": "^1.5.2",
+    "@earendil-works/pi-ai": "^1.5.2",
+    "@earendil-works/pi-coding-agent": "^1.5.2",
+    "@earendil-works/pi-tui": "^1.5.2",
+    "@types/node": "^22.0.0",
+    "typebox": "^1.3.27",
+    "typescript": "^5.8.0"
+  }
+}

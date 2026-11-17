@@ -1,0 +1,37 @@
+---
+name: CI
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install debugpy for live Python DAP tests
+        run: python -m pip install --upgrade pip debugpy
+
+      - name: Install dev dependencies
+        run: npm install
+
+      - name: Typecheck & run unit + live e2e suites
+        run: npm run check
+
+      - name: Verify npm tarball contents
+        run: npm pack --dry-run
