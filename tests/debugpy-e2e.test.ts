@@ -4,12 +4,13 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import { afterEach, describe, it } from "node:test";
-import { runAdapterDoctor } from "../src/adapters/discovery.ts";
+import { discoverAllAdapters, runAdapterDoctor } from "../src/adapters/discovery.ts";
 import { DebugSessionManager } from "../src/session-manager.ts";
 
 describe("Python debugpy & multi-session live e2e", () => {
   const doctor = runAdapterDoctor(process.cwd());
   const debugpyReady = doctor.find((d) => d.name === "debugpy")?.available ?? false;
+  const pyAdapter = discoverAllAdapters(process.cwd()).get("debugpy");
   const managers: DebugSessionManager[] = [];
 
   afterEach(async () => {
@@ -92,11 +93,16 @@ describe("Python debugpy & multi-session live e2e", () => {
       "utf8",
     );
 
-    const child = spawn("uv", ["run", "--no-project", "--with", "debugpy", "python3", pyServer], {
+    assert.ok(pyAdapter, "expected debugpy adapter when debugpyReady=true");
+    const spawnCmd = pyAdapter.command ?? "python3";
+    const spawnArgs =
+      path.basename(spawnCmd) === "uv"
+        ? ["run", "--no-project", "--with", "debugpy", "python3", pyServer]
+        : [pyServer];
+    const child = spawn(spawnCmd, spawnArgs, {
       cwd: tmp,
       stdio: ["ignore", "pipe", "pipe"],
     });
-
     try {
       const port = await new Promise<number>((resolve, reject) => {
         const timer = setTimeout(() => reject(new Error("Timed out waiting for debugpy PORT")), 15_000);
