@@ -34,7 +34,16 @@ jobs:
           npm install
           npm run check
 
-      - name: Publish public pi-package to npm
-        run: npm publish --provenance --access public
+      - name: Upgrade npm CLI for OIDC trusted publishing
+        run: npm install -g npm@11
+
+      - name: Publish public pi-package to npm (idempotent)
+        run: |
+          PKG_VER=$(npm pkg get version | tr -d '"')
+          if npm view "pi-debugger@${PKG_VER}" version >/dev/null 2>&1; then
+            echo "pi-debugger@${PKG_VER} already published — skipping."
+            exit 0
+          fi
+          npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
